@@ -1,0 +1,6 @@
+table inet fw4 {
+  chain mangle_prerouting {
+    type filter hook prerouting priority mangle; policy accept;
+    iifname "br-lan" ip daddr @wan_bypass meta mark set 0x100
+  }
+}

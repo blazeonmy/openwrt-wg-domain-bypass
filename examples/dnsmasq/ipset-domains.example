@@ -1,0 +1,31 @@
+# Example UCI dnsmasq ipset sections.
+# Copy selected blocks into /etc/config/dhcp and adjust domains as needed.
+
+config ipset
+        option name 'tld_wan_bypass_ru'
+        option table 'inet'
+        option family '4'
+        option set 'wan_bypass'
+        list domain 'ru'
+
+config ipset
+        option name 'tld_wan_bypass_su'
+        option table 'inet'
+        option family '4'
+        option set 'wan_bypass'
+        list domain 'su'
+
+config ipset
+        option name 'tld_wan_bypass_rf'
+        option table 'inet'
+        option family '4'
+        option set 'wan_bypass'
+        list domain 'xn--p1ai'
+
+config ipset
+        option name 'service_wan_bypass'
+        option table 'inet'
+        option family '4'
+        option set 'wan_bypass'
+        list domain 'example-service.test'
+        list domain 'static.example-service.test'

@@ -24,6 +24,19 @@ The setup does not require `pbr` or `vpn-policy-routing`.
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    client["LAN client"] --> dns["OpenWrt dnsmasq"]
+    dns --> set["nft set: inet fw4 wan_bypass"]
+    client --> fw["fw4 / nftables"]
+    set --> fw
+    fw -->|"matched destination: mark 0x100"| rule["ip rule -> table 100"]
+    rule --> wan["WAN gateway"]
+    fw -->|"unmarked traffic"| wg["WireGuard wg0"]
+    wg --> internet["Internet"]
+    wan --> internet
+```
+
 ```text
 LAN client
   |
@@ -54,6 +67,12 @@ All unmarked traffic continues through WireGuard.
 |   |-- network.example   # sanitized /etc/config/network snippets
 |   |-- firewall.example  # sanitized /etc/config/firewall snippets
 |   `-- dhcp.example      # sanitized /etc/config/dhcp snippets
+|-- docs/
+|   |-- architecture.md
+|   `-- troubleshooting.md
+|-- examples/
+|   |-- dnsmasq/
+|   `-- nftables/
 |-- scripts/
 |   `-- check-router-state.sh
 `-- .github/workflows/ci.yml
