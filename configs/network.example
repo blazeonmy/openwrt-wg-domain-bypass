@@ -1,0 +1,42 @@
+# Sanitized snippets for /etc/config/network.
+# Replace all placeholder values locally on the router.
+
+config interface 'wan'
+        option proto 'dhcp'
+
+config interface 'wg0'
+        option proto 'wireguard'
+        option private_key '<WG_PRIVATE_KEY>'
+        list addresses '<WG_TUNNEL_ADDRESS_CIDR>'
+        option defaultroute '1'
+
+config wireguard_wg0
+        option description 'primary-vpn-peer'
+        option public_key '<WG_PEER_PUBLIC_KEY>'
+        option endpoint_host '<WG_ENDPOINT_HOST_OR_IP>'
+        option endpoint_port '<WG_ENDPOINT_PORT>'
+        option persistent_keepalive '25'
+        list allowed_ips '0.0.0.0/0'
+        option route_allowed_ips '1'
+
+# Keep the WireGuard endpoint reachable through WAN.
+config route
+        option interface 'wan'
+        option target '<WG_ENDPOINT_HOST_ROUTE>'
+        option netmask '255.255.255.255'
+        option gateway '<WAN_GATEWAY>'
+
+# WAN fallback table for marked bypass traffic.
+config route
+        option interface 'wan'
+        option target '0.0.0.0'
+        option netmask '0.0.0.0'
+        option gateway '<WAN_GATEWAY>'
+        option table '100'
+
+# Policy routing: fwmark 0x100 -> table 100.
+config rule
+        option name 'WAN_BYPASS_RULE'
+        option mark '0x100'
+        option lookup '100'
+        option priority '100'

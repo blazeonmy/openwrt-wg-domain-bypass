@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate shell scripts
+        run: find scripts -name "*.sh" -print -exec sh -n {} \;
+
+      - name: Check for forbidden placeholders
+        run: |
+          find . -type f \
+            -not -path "./.git/*" \
+            -not -path "./.github/workflows/ci.yml" \
+            -print0 \
+            | xargs -0 grep -InE "192\.168\.|10\.8\.|144\.31\.|1234|BEGIN (RSA|OPENSSH|PRIVATE)|[0-9]{8,10}:[A-Za-z0-9_-]{30,}" \
+            && exit 1 || exit 0

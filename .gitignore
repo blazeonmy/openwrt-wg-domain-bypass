@@ -1,0 +1,9 @@
+.env
+.env.*
+*.key
+*.pem
+*.ovpn
+wg0.conf
+wireguard*.conf
+openwrt-backup*.tar.gz
+*.log

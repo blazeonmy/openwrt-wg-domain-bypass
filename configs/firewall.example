@@ -1,0 +1,21 @@
+# Sanitized snippets for /etc/config/firewall.
+
+config set
+        option name 'wan_bypass'
+        option family 'ipv4'
+        option match 'dest_ip'
+        option storage 'hash'
+        option timeout '1h'
+
+config rule
+        option name 'WAN_BYPASS_MARK'
+        option src 'lan'
+        option dest '*'
+        option proto 'all'
+        option target 'MARK'
+        option set_mark '0x100'
+        option dest_ip '@wan_bypass'
+
+# Make sure forwarding from LAN to WAN and LAN to VPN is defined according to
+# your existing firewall zone layout. Do not paste this blindly over a live
+# firewall file without reviewing current zones.

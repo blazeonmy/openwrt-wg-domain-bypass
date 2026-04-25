@@ -1,0 +1,45 @@
+# Sanitized snippets for /etc/config/dhcp.
+# Requires dnsmasq-full.
+
+config dhcp 'lan'
+        option interface 'lan'
+        option start '100'
+        option limit '150'
+        option leasetime '12h'
+        list dhcp_option '6,<ROUTER_LAN_DNS_ADDRESS>'
+
+# TLD-level bypass rules. dnsmasq will add resolved IPv4 addresses into:
+# inet fw4 wan_bypass
+config ipset
+        option name 'ru_wan_bypass'
+        list domain 'ru'
+        option table 'inet'
+        option family '4'
+        option set 'wan_bypass'
+
+config ipset
+        option name 'su_wan_bypass'
+        list domain 'su'
+        option table 'inet'
+        option family '4'
+        option set 'wan_bypass'
+
+config ipset
+        option name 'rf_wan_bypass'
+        list domain 'xn--p1ai'
+        option table 'inet'
+        option family '4'
+        option set 'wan_bypass'
+
+# Optional service-level bypass examples.
+config ipset
+        option name 'services_wan_bypass'
+        option table 'inet'
+        option family '4'
+        option set 'wan_bypass'
+        list domain 'gosuslugi.ru'
+        list domain 'rbc.ru'
+        list domain 'rutube.ru'
+        list domain 'vk.com'
+        list domain 'yandex.ru'
+        list domain '2gis.ru'
